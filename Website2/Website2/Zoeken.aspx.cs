@@ -27,7 +27,7 @@ namespace Website2
                 GridViewItems.DataBind();
                 if (GridViewItems.Rows.Count >= 1)
                 {    
-                    if (soort == "Personages")
+                    if (soort == "Personage")
                     {
                         GridViewItems.AutoGenerateSelectButton = false;
                         BtnVoegToe.Visible = false;

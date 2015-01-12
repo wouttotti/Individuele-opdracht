@@ -13,7 +13,7 @@
     <asp:Button ID="BtnZoeken" runat="server" OnClick="BtnZoeken_Click" Text="Zoeken" />
     <asp:Label ID="LbErrorZoek" runat="server" Font-Size="Large" Text="Label" Visible="False"></asp:Label>
     <br />
-<asp:GridView ID="GridViewItems" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateSelectButton="True">
+<asp:GridView ID="GridViewItems" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None">
     <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
     <EditRowStyle BackColor="#999999" />
     <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />

@@ -89,12 +89,13 @@ namespace Website2
         //Hier word er gechecked of het wachtwoord wel overeen komt met het wachtwoord van de gebruiker
         public bool CheckWachtwoord(string wachtwoord, string email)
         {
-            string sql = "SELECT WACHTWOORD FROM GEBRUIKER WHERE EMAIL = '" + email + "'";
+            string sql = "SELECT WACHTWOORD FROM GEBRUIKER WHERE EMAIL = :Email";
             try
             {
                 List<string> Wachtwoorden = new List<string>();
                 ConnectieOpen();
                 OracleCommand cmd = new OracleCommand(sql, connectie);
+                cmd.Parameters.Add(":Email", email);
                 OracleDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
@@ -174,8 +175,9 @@ namespace Website2
         //In deze methode wordt de lijst van een gebruiker opgehaald
         public DataSet GetLijsten( int gebruiker_ID)
         {
-            string sql = "SELECT distinct i.TITEL, i.SOORT from LIJST l, ITEM i, GEBRUIKER g WHERE l.GEBRUIKER = " + gebruiker_ID + " AND l.ITEM = i.ITEMNR";
+            string sql = "SELECT distinct i.TITEL, i.SOORT from LIJST l, ITEM i, GEBRUIKER g WHERE l.GEBRUIKER = :Gebruiker AND l.ITEM = i.ITEMNR";
             OracleCommand cmd = new OracleCommand(sql, connectie);
+            cmd.Parameters.Add(":Gebruiker", gebruiker_ID);
             OracleDataAdapter adapter = new OracleDataAdapter(cmd);
             ConnectieOpen();
 
@@ -202,12 +204,15 @@ namespace Website2
         //Hier wordt een item uit de lijst van de gebruiker verwijderd
         public void DeleteLijstItem(string Naam, string Soort, string gebruikersnaam)
         {
-            string sql = "DELETE FROM LIJST WHERE ITEM = (SELECT ITEMNR FROM ITEM WHERE TITEL = '" + Naam + "' and SOORT = '"+ Soort + "') AND GEBRUIKER = (SELECT GEBRUIKER_ID FROM GEBRUIKER WHERE EMAIL = '"+ gebruikersnaam +"')";
+            string sql = "DELETE FROM LIJST WHERE ITEM = (SELECT ITEMNR FROM ITEM WHERE TITEL = :Naam and SOORT = :Soort) AND GEBRUIKER = (SELECT GEBRUIKER_ID FROM GEBRUIKER WHERE EMAIL = :Gebruikersnaam)";
            
             try
             {
                 ConnectieOpen();
                 OracleCommand cmd = new OracleCommand(sql, connectie);
+                cmd.Parameters.Add(":Naam", Naam);
+                cmd.Parameters.Add(":Soort", Soort);
+                cmd.Parameters.Add(":Gebruikersnaam", gebruikersnaam);
                 cmd.ExecuteNonQuery();
             }
             catch
@@ -220,9 +225,9 @@ namespace Website2
         public DataSet GetItems(string soort, string naam)
         {
             string sql = "Select i.ITEMNR, i.TITEL, i.JAAR, i.GEMIDDELDESCORE, i.SOORT FROM ITEM i where i.SOORT = :soort and i.TITEL = :naam";
-            if(soort == "Personages")
+            if(soort == "Personage")
             {
-                sql = "Select p.NAAM, p.TITEL p.KENMERKEN, P.TAGS FROM PERSONAGES WHERE p.TITEL = :naam";
+                sql = "SELECT p.Naam, i.TITEL, p.Kenmerken, p.Tags from Personages p, ITEM i WHERE p.Naam = 'Alice' and p.ITEMNR = i.ITEMNR";
             }
             ConnectieOpen();
             OracleCommand cmd = new OracleCommand(sql, connectie);
